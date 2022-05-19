@@ -1,0 +1,69 @@
+byte Speed = 0;
+
+int MSA = 10;
+int MDA = 12;
+
+int MSB = 11;
+int MDB = 13;
+
+void setup() {
+
+pinMode(4, INPUT_PULLUP);
+pinMode(3, INPUT_PULLUP);
+pinMode(2, INPUT_PULLUP);
+
+pinMode(MSA, OUTPUT);
+pinMode(MDA, OUTPUT);
+pinMode(MSB, OUTPUT);
+pinMode(MDB, OUTPUT);
+
+Serial.begin(9600) ;		//시리얼 통신 연결
+
+}
+
+void loop() {
+  if(digitalRead(3)== HIGH & digitalRead(4) == LOW){ 		// 4번버튼을 누른 상태 : 상승
+    if(digitalRead(2)==HIGH){		//비상버튼을 누르지 않은 상태
+  Speed = 214;			// 0.021m/s
+  analogWrite(MSA, Speed);
+  digitalWrite(MDA, HIGH); // A extraction 디지털로 바꿈
+    analogWrite(MSB, Speed);
+  digitalWrite(MDB, HIGH); // B extraction 디지털로 바꿨음
+ Serial.println(" 4번버튼을 누른 상태 : 상승, 비상버튼을 누르지 않은 상태 ");
+    }
+    else				// 비상버튼을 눌러 작동을 정지 시킴.
+    {
+      analogWrite(MSA,0);
+      digitalWrite(MDA,0);
+      analogWrite(MSB,0);
+      digitalWrite(MDB,0);
+	Serial.println("비상버튼을 눌러 작동을 정지 시킴.") ;
+    }
+}
+else if (digitalRead(3) == LOW & digitalRead(4)== HIGH){		//3번 버튼을 누름 : 하강
+  if(digitalRead(2)==HIGH){		//비상버튼을 누르지 않은 상태
+  Speed = 214; 			// 0.021m/s
+  analogWrite(MSA, Speed);
+  digitalWrite(MDA, LOW); //A  distraction 디지털로 바꿈
+  analogWrite(MSB, Speed);
+  digitalWrite(MDB, LOW); //B  distraction, 디지털로 바꿨음.
+	Serial.println("3번 버튼을 누름 : 하강, 비상버튼을 누르지 않은 상태") ;
+}
+ else		//비상버튼을 눌러 작동을 정지 시킴.
+    {
+      analogWrite(MSA,0);
+      digitalWrite(MDA,0);
+      analogWrite(MSB,0);
+      digitalWrite(MDB,0);
+	Serial.println("비상버튼을 눌러 작동을 정지 시킴.") ;
+    }
+}
+else {		//3번과 4번의 버튼을 동시에 누르거나 누르지 않을 때 작동 x
+      analogWrite(MSA,0);
+      digitalWrite(MDA,0);
+      analogWrite(MSB,0);
+      digitalWrite(MDB,0);
+	Serial.println("3번과 4번의 버튼을 동시에 누르거나 누르지 않을 때 작동 x") ;
+}
+  
+}
