@@ -1,0 +1,302 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+//기울기센서 보정값 칼만보정법 통해 진행함.
+#define mpu_add 0x68  //mpu6050 address
+
+int r1 = 3;	//릴레이1
+int r2 = 4;	//릴레이2
+int trig = 5;	//초음파센서
+int echo = 6;	//초음파 센서
+int es = 7;   //emergency switch
+
+class kalman {
+
+  public :
+
+    double getkalman(double acc, double gyro, double dt) {
+
+      //project the state ahead
+
+      angle += dt * (gyro - bias) ;
+
+
+
+      //Project the error covariance ahead
+
+      P[0][0] += dt * (dt * P[1][1] - P[0][1] - P[1][0] + Q_angle) ;
+
+      P[0][1] -= dt * P[1][1] ;
+
+      P[1][0] -= dt * P[1][1] ;
+
+      P[1][1] += Q_gyro * dt ;
+
+
+
+      //Compute the Kalman gain
+
+      double S = P[0][0] + R_measure ;
+
+      K[0] = P[0][0] / S ;
+
+      K[1] = P[1][0] / S ;
+
+
+
+      //Update estimate with measurement z
+
+      double y = acc - angle ;
+
+      angle += K[0] * y ;
+
+      bias += K[1] * y ;
+
+
+
+      //Update the error covariance
+
+      double P_temp[2] = {P[0][0], P[0][1]} ;
+
+      P[0][0] -= K[0] * P_temp[0] ;
+
+      P[0][1] -= K[0] * P_temp[1] ;
+
+      P[1][0] -= K[1] * P_temp[0] ;
+
+      P[1][1] -= K[1] * P_temp[1] ;
+
+
+
+      return angle ;
+
+    } ;
+
+    void init(double angle, double gyro, double measure) {
+
+      Q_angle = angle ;
+
+      Q_gyro = gyro ;
+
+      R_measure = measure ;
+
+
+
+      angle = 0 ;
+
+      bias = 0 ;
+
+
+
+      P[0][0] = 0 ;
+
+      P[0][1] = 0 ;
+
+      P[1][0] = 0 ;
+
+      P[1][1] = 0 ;
+
+    } ;
+
+    double getvar(int num) {
+
+      switch (num) {
+
+        case 0 :
+
+          return Q_angle ;
+
+          break ;
+
+        case 1 :
+
+          return Q_gyro ;
+
+          break ;
+
+        case 2 :
+
+          return R_measure ;
+
+          break ;
+
+      }
+
+    } ;
+
+  private :
+
+    double Q_angle, Q_gyro, R_measure ;
+
+    double angle, bias ;
+
+    double P[2][2], K[2] ;
+
+} ;
+
+
+
+kalman kal ;
+
+
+
+long ac_x, ac_y, ac_z, gy_x, gy_y, gy_z ;
+
+
+
+double deg, dgy_y ;
+
+double dt ;
+
+uint32_t pasttime ;
+
+const int pin_potentio =A0;
+const int pin_control=10;
+double sped=0.279;
+
+
+void setup() {
+
+  // put your setup code here, to run once:
+
+  Serial.begin(9600) ;
+
+  Wire.begin() ;
+
+  Wire.beginTransmission(mpu_add) ;
+
+  Wire.write(0x6B) ;
+
+  Wire.write(0) ;
+
+  Wire.endTransmission(true) ;
+
+  kal.init(0.001, 0.003, 0.03) ;  //init kalman filter
+
+  Serial.println() ;
+
+  Serial.print("parameter") ;
+
+  Serial.print("\t") ;
+
+  Serial.print(kal.getvar(0), 4) ;
+
+  Serial.print("\t") ;
+
+  Serial.print(kal.getvar(1), 4) ;
+
+  Serial.print("\t") ;
+
+  Serial.println(kal.getvar(2), 4) ;
+  ////////////////////////////////////////
+  pinMode(r1, OUTPUT);   //릴레이 출력
+   pinMode(r2, OUTPUT);
+  pinMode(trig, OUTPUT);  //초음파센서 입력
+  pinMode(echo, INPUT);
+   pinMode(es, INPUT_PULLUP);
+  ////////////////////////////////////////
+pinMode(pin_control, OUTPUT);
+ lcd.begin();
+ lcd.backlight(); // LCD 백라이트 켜기
+}
+
+
+
+void loop() {
+
+  // put your main code here, to run repeatedly:
+
+
+
+  Wire.beginTransmission(mpu_add) ; //get acc data
+
+  Wire.write(0x3B) ;
+
+  Wire.endTransmission(false) ;
+
+  Wire.requestFrom(mpu_add, 6, true) ;
+
+  ac_x = Wire.read() << 8 | Wire.read() ;
+
+  ac_y = Wire.read() << 8 | Wire.read() ;
+
+  ac_z = Wire.read() << 8 | Wire.read() ;
+
+
+
+  Wire.beginTransmission(mpu_add) ; //get gyro data
+
+  Wire.write(0x43) ;
+
+  Wire.endTransmission(false) ;
+
+  Wire.requestFrom(mpu_add, 6, true) ;
+
+  gy_x = Wire.read() << 8 | Wire.read() ;
+
+  gy_y = Wire.read() << 8 | Wire.read() ;
+
+  gy_z = Wire.read() << 8 | Wire.read() ;
+
+
+
+  deg = atan2(ac_x, ac_z) * 180 / PI ;  //acc data to degree data
+
+  dgy_y = gy_y / 131. ;  //gyro output to
+
+
+
+  dt = (double)(micros() - pasttime) / 1000000;
+
+  pasttime = micros();  //convert output to understandable data
+
+
+
+  double val = kal.getkalman(deg, dgy_y, dt) ;  //get kalman data
+//////////////////////////////////////////////////////////////
+    digitalWrite(trig, LOW);
+    digitalWrite(echo, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trig, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trig, LOW);
+    unsigned long duration = pulseIn(echo, HIGH);     
+    float distance = ((float)(340 * duration) / 10000) / 2;   
+
+ 
+  // 각도값 Y축회전 & 각도 범위 : +-0.25 
+
+  /////////////////////////// 포텐서미터 속도 조건 지정
+int pm= anlogRead(pin_potentio);
+int pwm=map(pm, 0, 1024, 0.279, 0.71); // 모터 최소 0.279m/s 부터 최대 0.71m/s까지 속도 범위 지정
+
+///////////////////////////////////////////////////////////////// 조건식 시작
+   
+ ///////////////경사로일때   
+    if(val > 5){		//기울기 5도 측정될 때 조건
+    if(distance > 50){      //50보다 멀면 릴레이 작동 안함
+   digitalWrite(r1,HIGH); //릴레이 작동 x
+   digitalWrite(r2,HIGH);
+  }
+  else{
+  digitalWrite(r1,LOW); //릴레이 작동
+  digitalWrite(r2,LOW); //릴레이 작동
+  analogWrite(pin_control, pwm); // 속도 제어 가능
+  delay{2000}; // 속도 급변으로 인한 사고 방지위해 지연시간 2초 가짐
+  
+  lcd.setCursor(0,0);
+  lcd.print("Motor on");
+  lcd.setCursor(0,1);
+  lcd.print(pwm) //스피드 표시
+  delay(2000);}
+}
+
+///////////경사로일때 끝
+    
+  else{ //평지일때
+   digitalWrite(r1,HIGH); //릴레이 작동 x
+   digitalWrite(r2,HIGH);
+  ////////////////평지일때 끝
+    delay(5000);
+}
+}
