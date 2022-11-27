@@ -1,0 +1,112 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+/*
+//412pg 11번
+int combination(int n, int r);
+int r = 0;
+int main(void)
+{
+	int n, k;
+	printf("n=");
+	scanf("%d", &n);
+	printf("k=");
+	scanf("%d", &k);
+	combination(n, k);
+	printf("%d",r);
+	return 0;
+}
+int combination(int n, int k)
+{
+	if (k == n || k == 0)
+	{
+		r++;
+
+	}
+	else
+	{
+		combination(n - 1, k - 1);
+		combination(n - 1, k);
+
+	}
+}
+*/
+/*
+ // 413pg 12번
+int fib(int n);
+
+int main(void)
+{
+	for (int i = 0; i < 10; i++)
+	{
+		printf("f(%d) = %d \n", i, fib(i));
+
+	}
+	return 0;
+}
+
+int fib(int n)
+{
+	if (n == 0) return 0;
+	else if (n == 1) return 1;
+	else return fib(n - 2) + fib(n - 1);
+}
+*/
+/*
+ //368pg 7번
+int get_tax(int income);	
+
+void main() {
+	int in;
+	printf("소득을 입력하시오(만원):");
+	scanf_s("%d", &in);
+
+	printf("소득세는 %d만원입니다.\n", get_tax(in));
+}
+
+int get_tax(int income) {
+	int r;
+
+	if (income < 1000)
+		r = income * 0.08;
+	else
+		r = 80 + (income - 1000) * 0.1; //1000만원이상의 수익의 소득세를 구할 때 1000만원이상의 금액에 대해서만 10%의 세금을 지불하고 1000만원 이하의 금액은 80만원으로 고정된다.
+
+	return r;
+}
+*/
+
+/*
+// 270pg 16번
+double facto(double n);
+int main(void)
+{
+	int n, i;
+	double j, k;
+	k = 1;
+
+	printf("어디까지 계산할까요: ");
+	scanf("%d", &n);
+
+	for (i = 1; i <= n; i++)
+	{
+		j = 1 / facto(i);
+		k = k + j;
+	}
+	printf("오일러의 수는 %f입니다.\n", k);
+
+	return 0;
+
+}
+
+double facto(double n)
+{
+	double i, j;
+	j = 1;
+	for (i = 1; i <= n; i++)
+	{
+		j *= i;
+
+	}
+	return j;
+}
+*/
