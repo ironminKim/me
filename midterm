@@ -1,0 +1,102 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+//midterm exam
+int main()
+/* {
+	int n, i;
+	int t1 = 0;
+	int t2 = 1;
+	int t3;
+	printf("피보나치 입력: ");
+	scanf("%d", &n);
+	for (i = 0; i <= n; i++)
+	{
+		printf("%d\n", t1);
+		t3 = t1 + t2;
+		t1 = t2;
+		t2 = t3;
+
+	}
+}*/
+/* {
+	//cal
+	int n1, n2;
+	char op;
+	printf("계산하기:");
+	scanf("%d %c %d", &n1, &op, &n2);
+	switch (op)
+	{
+	case '+':
+		printf("%d %c %d = %d", n1, op, n2, n1 + n2);
+		break;
+	case '-':
+		printf("%d %c %d = %d", n1, op, n2, n1 - n2);
+		break;
+	case '*':
+		printf("%d %c %d = %d", n1, op, n2, n1 * n2);
+		break;
+	case '/':
+		printf("%d %c %d = %d", n1, op, n2, n1 / n2);
+		break;
+	default:
+		printf("wrong ");
+
+		break;
+
+	}
+}*/
+/* {
+	int n1, n2;
+	char op;
+	printf(" calculate : ");
+	scanf("%d %c %d", &n1, &op, &n2);
+
+	if (op == '+')
+	{
+		printf("%d %c %d = %d", n1, op, n2, n1 + n2);
+		return 0;
+	}
+	else if (op == '-')
+	{
+		printf("%d %c %d = %d", n1, op, n2, n1 - n2);
+		return 0;
+	}
+	else if (op == '*')
+	{
+		printf("%d %c %d = %d", n1, op, n2, n1 * n2);
+		return 0;
+	}
+	else if (op == '/')
+	{
+		printf("%d %c %d = %d", n1, op, n2, n1 / n2);
+		return 0;
+	}
+	else printf("wrong");
+}
+*/
+/* {
+	//삼각형 만들기
+	int l1, l2, l3;
+	printf(" 삼각형의 세 변을 입력하세요: ");
+	scanf("%d,%d,%d", &l1, &l2, &l3);
+
+	if (l1 + l2 > l3 && l1 + l3 > l2 && l2 + l3 > l1)
+	{
+		printf("삼각형 가능");
+
+	}
+	else printf("wrong");
+}*/
+{
+	//팩토리얼
+	int n;
+	int result = 1;
+	printf("정수 입력: ");
+	scanf("%d", &n);
+	for (int i = 1; i <= n; i++)
+	{
+		result *= i;
+		
+	}
+	printf("%d ! = %d", n, result);
+}
