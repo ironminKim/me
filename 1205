@@ -1,0 +1,206 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
+#define SIZE 20
+#define NUM 3
+int main(void) { //배열 연습.
+	int n;
+
+	char name[NUM][20];
+	scanf("%s", name[n]);
+	printf(" 성명 : %s", name[n]);
+}
+
+//0~100사이의 정수를 입력받아 합계 평균 최댓값 최솟값 구하기
+/*
+int main() {
+	int cnt = 0;
+	double input, sum = 0.0, max = 0.0, min = 100.0;
+	for (;;) {
+		scanf(" % lf", &input);
+		if (input < 0 || input > 100)
+			break;
+		cnt++;
+		sum += input;
+		if (input > max)
+			max = input;
+		if (input < max)
+			max = input;
+	}
+	printf("%lf,%lf,%lf,%lf,", input, input / 4, max, min);
+}
+*/
+
+//앞 행, 뒤 열
+// 여섯글자 넣을 때 7개를 지정해야한다.
+// 
+// 
+//정렬이 된게 아닌 값이 시험문제. 배열에서 모든 문제 출제 예정 2,3 문제 , 함수정의 x 함수없이
+
+/*int main(void)
+{//이진탐색 2 시험 가능성 높은 문제이므로 본 문제 숙지할 것.
+
+	int key;
+	int low, high, middle;
+	int list[SIZE] = { 0 };
+	int i,j;
+	int temp;
+	srand(time(NULL));
+	printf("원본 값\n>>");
+	for (i = 0; i < SIZE; i++) {
+		list[i] = rand() % 1000;
+		printf("%4d", list[i]);
+	}
+
+	//오름차순 정렬 알고리즘 시작.
+
+	for (int i = 0; i < SIZE - 1; i++)
+	{
+		for (int j = 0; j < SIZE - 1 - i; j++)
+		{
+			if (list[j] > list[j + 1])
+			{
+				temp = list[j];
+				list[j] = list[j + 1];
+				list[j + 1] = temp;
+			}
+		}
+	}
+
+	//오름차순 정렬된 출력
+	printf("\n버블 정렬을 사용하여 오름차순한 결과\n>>");
+	for (int i = 0; i < SIZE; i++)
+	{
+		printf("%4d", list[i]);
+	}*/
+	//정렬알고리즘 끝.
+	/* //기존 정렬 알고리즘인데 오류를 일으키므로 디버깅 진행할 수 있으면 진행할 것.
+	for (i = 0; i < SIZE - 1; i++) {
+		for (j = 0; j < SIZE - 1 - i; j++) {
+			if (list[j] = list[j + 1]) {
+				temp = list[j];
+				list[j] = list[j + 1];
+				list[j + 1] = temp;
+			}
+			printf("\n정렬 후 값:");
+			for (i = 0; i < SIZE; i++) {
+				printf("%4d", list[i]);
+			}
+		}
+	}
+
+	*/
+/*
+	printf("\n탐색할 값을 입력하시오 : ");
+	scanf("%d", &key);
+
+
+	low = 0;
+	high = SIZE - 1;
+
+	while (low <= high) {
+		printf("[%d %d]\n", low, high);
+		middle = (low + high) / 2;
+		if (key == list[middle])
+		{
+			printf("탐색할 값 : %d\n", middle);
+			break;
+		}
+		else if (key > list[middle])// 중간 원소보다 크다면
+			low = middle + 1; // 새로운 값으로 low 설정
+		else
+			high = middle - 1; // 새로운 값으로 high 설정
+	}
+	return 0;
+}
+*/
+/*
+int main(void)
+{//이진탐색 1 
+	int key;
+	int low, high, middle;
+	int list[SIZE] = { 2,6,11,13,18,20,22,27,29,30,34,38,41,42,45,47 };
+	printf("탐색할 값을 입력하시오:");
+	scanf("%d", &key);
+
+
+	low = 0;
+	high = SIZE - 1;
+
+	while (low <= high) {
+		printf("[%d %d]\n", low, high);
+		middle = (low + high) / 2;
+		if (key == list[middle])
+		{
+			printf("탐색할 값 %d\n", middle);
+			break;
+		}
+		else if (key > list[middle])// 중간 원소보다 크다면
+			low = middle + 1; // 새로운 값으로 low 설정
+		else
+			high = middle - 1; // 새로운 값으로 high 설정
+	}
+	return 0;
+}
+*/
+/*
+{//버블탐색 ,버블 정렬
+	{
+	int data[SIZE] = { 0 };
+	int i, j, temp = 0;
+	srand(time(NULL));
+	printf("원본 값:");
+	for (i = 0; i < SIZE; i++) {
+		data[i] = rand() % 100;
+		printf("%4d", data[i]);
+	}//정렬 알고리즘은 버블 2 코드에서 확인할 것. 본 알고리즘은 오류를 일으킴,
+
+	for (i = 0; i < SIZE - 1; i++) {
+		for (j = 0; j < SIZE - 1 - i; j++) {
+			if (data[j] = data[j + 1]) {
+				temp = data[j];
+				data[j] = data[j + 1];
+				data[j + 1] = temp;
+			}
+			printf("\n정렬 후 값:");
+			for (i = 0; i < SIZE; i++) {
+				printf("%4d", data[i]);
+			}
+		}
+		printf("\n정렬 후 값:");
+		for (i = 0; i < SIZE; i++) {
+			printf("%4d", data[i]);
+		}
+	}
+	printf("\n정렬 후 값:");
+	for (i = 0; i < SIZE;i++) {
+		printf("%4d", data[i]);
+	}
+}
+
+}
+*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*{ //순차탐색
+int key, i;
+
+int list[SIZE] = { 0 };
+
+srand((unsigned)time(NULL));
+
+for (i = 0; i < SIZE; i++) {
+	list[i] = rand() % 1000;
+	printf("%4d", list[i]);
+}
+printf("\n 탐색할 값을 입력하시오 : ");
+scanf("%d", &key);
+for (i = 0; i < SIZE; i++) {
+	if (list[i] == key)
+		printf("탐색 성공 \n인덱스= %d\n", i);
+}
+printf("탐색 종료\n");
+return 0;
+}
+*/
